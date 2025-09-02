@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#define FILENAME "real_input.txt"
 #define INPUT_LENGTH 1000
 
 typedef struct String_List {
@@ -75,13 +76,23 @@ int compar(const void *a, const void *b)
 	return (*(int *)a - *(int *)b);
 }
 
+int get_num_count_in_arr(int arr[], int size, int needle)
+{
+	int count = 0;
+	for (int i = 0; i < size; ++i) {
+		if (needle == arr[i]) {
+			count++;
+		}
+	}
+	return count;
+}
+
 int main(void)
 {
 	int left_input[INPUT_LENGTH] = {0};
 	int right_input[INPUT_LENGTH] = {0};
-	
-	const char *filename = "real_input.txt";
-	FILE *f = fopen(filename, "r");
+
+	FILE *f = fopen(FILENAME, "r");
 
 	char line[16] = {0};
 	char *fgets_stats;
@@ -101,11 +112,15 @@ int main(void)
 	// Sort Left Input and Right Input
 	qsort(left_input, INPUT_LENGTH, sizeof(int), compar);
 	qsort(right_input, INPUT_LENGTH, sizeof(int), compar);
-	int result = 0;
+	int result1 = 0;
+	int result2 = 0;
 	for (int i = 0; i < INPUT_LENGTH; ++i) {
-		result += abs(left_input[i] - right_input[i]);
+		result1 += abs(left_input[i] - right_input[i]);
+		int multiplier = get_num_count_in_arr(right_input, INPUT_LENGTH, left_input[i]);
+		result2 += left_input[i] * multiplier;
 	}
-	printf("result: %d\n", result);
+	printf("result solution 1: %d\n", result1);
+	printf("result solution 2: %d\n", result2);	
 	
 	fclose(f);
 	return 0;
